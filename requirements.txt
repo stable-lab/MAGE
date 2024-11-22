@@ -1,0 +1,9 @@
+config
+httpx
+llama-index-core
+llama-index-llms-anthropic
+llama-index-llms-openai
+pre-commit
+pydantic
+rich
+tiktoken
