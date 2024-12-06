@@ -42,5 +42,37 @@ brew install icarus-verilog
 ```
 [verilog-eval](https://github.com/NVlabs/verilog-eval)
 ```
+
+```
 git clone https://github.com/NVlabs/verilog-eval
+```
+
+## File structure
+```
+.
+├── README.md
+├── action.yml
+├── requirements.txt
+├── setup.py
+├── src
+│   └── mage_rtl
+│       ├── agent.py
+│       ├── bash_tools.py
+│       ├── benchmark_read_helper.py
+│       ├── gen_config.py
+│       ├── log_utils.py
+│       ├── prompts.py
+│       ├── rtl_editor.py
+│       ├── rtl_generator.py
+│       ├── sim_judge.py
+│       ├── sim_reviewer.py
+│       ├── tb_generator.py
+│       ├── token_counter.py
+│       └── utils.py
+├── testbench_generate.ipynb
+└── tests
+    ├── test_llm_chat.py
+    ├── test_rtl_generator.py
+    ├── test_single_agent.py
+    └── test_top_agent.py
 ```
