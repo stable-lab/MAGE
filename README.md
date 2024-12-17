@@ -76,3 +76,32 @@ git clone https://github.com/NVlabs/verilog-eval
     ├── test_single_agent.py
     └── test_top_agent.py
 ```
+
+## Run Guide
+```
+python tests/test_top_agent.py
+```
+
+Run arguments can be set in the file like:
+
+```
+args_dict = {
+    "model": "claude-3-5-sonnet-20241022",
+    "filter_instance": "^(Prob011_norgate)$",
+    "type_benchmark": "verilog_eval_v2",
+    "path_benchmark": "../verilog-eval",
+    "run_identifier": "claude3.5sonnet_20241113_v2",
+    "n": 1,
+    "temperature": 0.85,
+    "top_p": 0.95,
+}
+```
+Where each argument means:
+1. model: The LLM model used. Support for gpt-4o and claude has been verified.
+2. filter_instance: A RegEx style instance name filter.
+3. type_benchmark: Support running verilog_eval_v1 or verilog_eval_v2
+4. path_benchmark: Where the benchmark repo is cloned
+5. run_identifier: Unique name to disguish different runs
+6. n: Number of repeated run to execute
+7. temperature: Argument for LLM generation randomness. Usually between [0, 1]
+8. top_p: Argument for LLM generation randomness. Usually between [0, 1]

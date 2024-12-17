@@ -1,0 +1,53 @@
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.6.0
+    hooks:
+      - id: trailing-whitespace
+        name: (Common) Remove trailing whitespaces
+      - id: mixed-line-ending
+        name: (Common) Fix mixed line ending
+        args: [--fix=lf]
+      - id: end-of-file-fixer
+        name: (Common) Remove extra EOF newlines
+      - id: check-merge-conflict
+        name: (Common) Check for merge conflicts
+      - id: requirements-txt-fixer
+        name: (Common) Sort "requirements.txt"
+      - id: check-added-large-files
+        name: (Common) Prevent giant files from being committed
+      - id: fix-encoding-pragma
+        name: (Python) Remove encoding pragmas
+        args: [--remove]
+      - id: debug-statements
+        name: (Python) Check for debugger imports
+      - id: check-json
+        name: (JSON) Check syntax
+      - id: check-yaml
+        name: (YAML) Check syntax
+      - id: check-toml
+        name: (TOML) Check syntax
+
+  - repo: https://github.com/psf/black
+    rev: 24.8.0
+    hooks:
+      - id: black
+        args: [--line-length=88]
+
+  - repo: https://github.com/PyCQA/isort
+    rev: 5.13.2
+    hooks:
+      - id: isort
+        args: ["--profile", "black", "--filter-files"]
+
+  - repo: https://github.com/PyCQA/flake8
+    rev: 7.1.1
+    hooks:
+      - id: flake8
+        additional_dependencies: [flake8-bugbear]
+        args: ["--max-line-length=88", "--extend-ignore=E203,W503,E501,F541"]
+
+  - repo: https://github.com/pre-commit/mirrors-mypy
+    rev: v1.3.0
+    hooks:
+      - id: mypy
+        args: [--ignore-missing-imports]

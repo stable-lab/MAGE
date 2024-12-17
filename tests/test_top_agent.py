@@ -33,12 +33,12 @@ args_dict = {
     #    "Prob145_circuit8|Prob146_fsm_serialdata"
     #    ")$"
     # ),
-    # "filter_instance": "^(Prob034_dff8)$",
-    "filter_instance": "^(.*)$",
+    "filter_instance": "^(Prob011_norgate)$",
+    # "filter_instance": "^(.*)$",
     "type_benchmark": "verilog_eval_v2",
     "path_benchmark": "../verilog-eval",
     "run_identifier": "claude3.5sonnet_20241113_v2",
-    "n": 3,
+    "n": 1,
     "temperature": 0.85,
     "top_p": 0.95,
 }
