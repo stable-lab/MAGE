@@ -182,6 +182,11 @@ Like when detecting pattern "11", should be like:
 @(posedge clk); in_ = 0; expected_out = 1;
 """
 
+COVERAGE_PROMPT = r""" Your task involves a Verilog Design Under Test (DUT) that is currently in its initial phase of testing. 
+            The assignment requires you to generate a binary input sequence to maximize code coverage. 
+            To achieve this, you need to analyze the DUT, considering the logic operations and transitions within the circuit. 
+            This careful analysis will allow you to discern the relationship between the input sequence and the uncovered lines, and thus generate an effective input sequence.)";
+        // task_prompt += input_signal_prompt_;"""
 
 class TBGenerator:
     def __init__(
