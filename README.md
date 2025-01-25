@@ -1,15 +1,18 @@
 # MAGE: A Multi-Agent Engine for Automated RTL Code Generation
 
+You can learn more on our Arxiv Paper: https://arxiv.org/abs/2412.07822.
 MAGE is an open-source multi-agent LLM RTL code generator.
 
-## Installation guide
+![DAC-overview](fig/DAC-overview.jpg)
 
-### To install the repo itself:
+## Environment Set Up
+
+### 1.> To install the repo itself:
 ```
 pip install -Ue .
 ```
 
-### To set api key：
+### 2.>To set api key：
 You can either:
 1. Set "OPENAI_API_KEY", "ANTHROPIC_API_KEY" or other keys in your env variables
 2. Set key.cfg file. Each line should be like:
@@ -38,7 +41,35 @@ $ git clone https://github.com/steveicarus/iverilog.git && cd iverilog \
 brew install icarus-verilog
 ```
 
-### To get benchmarks
+### 3.>  Verilator Installation
+
+```
+# By apt
+sudo apt install verilator
+
+# By Compilation
+git clone https://github.com/verilator/verilator
+cd verilator
+autoconf
+export VERILATOR_ROOT=`pwd`
+./configure
+make -j4
+```
+
+### 4.> Pyverilog Installation
+
+```
+# pre require
+pip3 install jinja2 ply
+
+git clone https://github.com/PyHDI/Pyverilog.git
+cd Pyverilog
+# must to user dir, or error because no root
+python3 setup.py install --user
+```
+
+### 5.> To get benchmarks
+
 ```
 [verilog-eval](https://github.com/NVlabs/verilog-eval)
 ```
