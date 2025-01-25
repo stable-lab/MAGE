@@ -8,7 +8,7 @@ import os
 
 client = OpenAI(
     # This is the default and can be omitted
-    api_key="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"
+    api_key="####"
 )
 
 
