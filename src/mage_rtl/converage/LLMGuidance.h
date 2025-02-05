@@ -24,7 +24,7 @@ public:
 
     LLMGuidance(LLMGuidanceConfig config);
     ~LLMGuidance();
-    
+
     // If Guidance prepared for a new loop, return true
     int waitForInput();
 
@@ -76,8 +76,8 @@ protected:
     // Test generation strategies
     string covStrategy1();
 
-    
-    
+
+
 protected:
     // DUT Information
     // path of dut verilog file
@@ -110,9 +110,9 @@ protected:
     // Prompt Setting
     // coverage report sent to llm
     // 0  llm-readable cov rpst;
-    // 1  verilator annotated cov rpst; 
+    // 1  verilator annotated cov rpst;
     // 2  verilator-provided original dat rpst
-    int cov_rpst_pattern_;  
+    int cov_rpst_pattern_;
     // whether use dut description
     bool use_dut_des_;
     // whether use manual instruction
@@ -121,9 +121,9 @@ protected:
     // History Information
     // pair.first: input (in our format)
     // pair.second: true simulation cov (in origin coverage.dat format)
-    vector<pair<string, string>> history_cov; 
+    vector<pair<string, string>> history_cov;
     string history_dir_path_;
-    // record prompt gpt-generated input for this iteration 
+    // record prompt gpt-generated input for this iteration
     vector<string> answer_cur_iter_;
     vector<string> prompt_cur_iter_;
 

@@ -7,9 +7,9 @@
 
 using namespace std;
 
-LLMGuidance4CodeCov::LLMGuidance4CodeCov(LLMGuidanceConfig config) 
+LLMGuidance4CodeCov::LLMGuidance4CodeCov(LLMGuidanceConfig config)
     : LLMGuidance(config) {
-    
+
 }
 
 string LLMGuidance4CodeCov::genInput4undirectedCov(bool first_flag, float temperature) {
@@ -28,9 +28,9 @@ string LLMGuidance4CodeCov::genInput4undirectedCov(bool first_flag, float temper
         buffer << input_file.rdbuf();
         string dut_prompt = buffer.str();
 
-        string task_prompt = R"(Your task involves a Verilog Design Under Test (DUT) that is currently in its initial phase of testing. 
-            The assignment requires you to generate a binary input sequence to maximize code coverage. 
-            To achieve this, you need to analyze the DUT, considering the logic operations and transitions within the circuit. 
+        string task_prompt = R"(Your task involves a Verilog Design Under Test (DUT) that is currently in its initial phase of testing.
+            The assignment requires you to generate a binary input sequence to maximize code coverage.
+            To achieve this, you need to analyze the DUT, considering the logic operations and transitions within the circuit.
             This careful analysis will allow you to discern the relationship between the input sequence and the uncovered lines, and thus generate an effective input sequence.)";
         // task_prompt += input_signal_prompt_;
         if(use_dut_des_) {
@@ -53,11 +53,11 @@ string LLMGuidance4CodeCov::genInput4undirectedCov(bool first_flag, float temper
         // prompt = task_prompt + "\n" + dut_prompt + "\n" + input_signal_prompt_ + "\n" + answer_format_prompt_;
         prompt1 = task_prompt + "\n" + dut_prompt + "\n";
     } else {
-        
+
         string dut_cov_prompt = undirectedCovRpst();
-        string task_prompt = R"(Your task involves a Verilog Design Under Test (DUT) that is currently in its initial phase of testing. 
-        The assignment requires you to generate a binary input sequence to cover these uncovered lines with mark 'TO BE COVERED'. 
-        To achieve this, you need to analyze the DUT, considering the logic operations and transitions within the circuit. 
+        string task_prompt = R"(Your task involves a Verilog Design Under Test (DUT) that is currently in its initial phase of testing.
+        The assignment requires you to generate a binary input sequence to cover these uncovered lines with mark 'TO BE COVERED'.
+        To achieve this, you need to analyze the DUT, considering the logic operations and transitions within the circuit.
         This careful analysis will allow you to discern the relationship between the input sequence and the uncovered lines, and thus generate an effective input sequence.)";
         // task_prompt += input_signal_prompt_;
         if(use_dut_des_) {
@@ -79,7 +79,7 @@ string LLMGuidance4CodeCov::genInput4undirectedCov(bool first_flag, float temper
         task_prompt += "\n### DUT ###\n";
 
         // prompt = task_prompt + "\n" + dut_cov_prompt + "\n" + input_signal_prompt_ + "\n" + answer_format_prompt_;
-        prompt1 = task_prompt + "\n" + dut_cov_prompt + "\n"; 
+        prompt1 = task_prompt + "\n" + dut_cov_prompt + "\n";
     }
 
     // prompt1 += R"(Answer: Let's think step by step.)";
@@ -98,7 +98,7 @@ string LLMGuidance4CodeCov::genInput4undirectedCov(bool first_flag, float temper
     prompt2 +=  "Please translate that content with the following format\n";
 
     prompt2 += "### Instruction ###\n" + getGptOutputJsonFormat();
-    prompt2 +=  R"(Ensure your response strictly adheres to this format and does not include any additional or irrelevant information. 
+    prompt2 +=  R"(Ensure your response strictly adheres to this format and does not include any additional or irrelevant information.
         Focus on providing the binary input sequence for each signal after an in-depth analysis of the DUT.\n)";
 
     string answer2 = sendMsg2GPT(prompt2, temperature, false);
@@ -140,10 +140,10 @@ string LLMGuidance4CodeCov::undirectedCovRpst() {
         // fix the cov info: delete the hit count before 'if', this will confuse GPT
         oss << input_file.rdbuf();
     }
-    else 
+    else
     {
         string cmd = "";
-        // this cmd will not generate a annotated top.v if 100% covpoint is hit 
+        // this cmd will not generate a annotated top.v if 100% covpoint is hit
         cmd += "verilator_coverage --annotate logs/total-annotated logs/coverage.dat.total --annotate-min 1 > /dev/null";
         int result = system(cmd.c_str());
         ifstream input_file("logs/total-annotated/top.v");
@@ -158,18 +158,18 @@ string LLMGuidance4CodeCov::undirectedCovRpst() {
             iss >> number;
             getline(iss, rest);
 
-            // line with cover points 
-            if(number[0]=='0' || number[0]=='%')  { 
+            // line with cover points
+            if(number[0]=='0' || number[0]=='%')  {
             // not line with 'if'
                if (rest.find("if") == string::npos) {
                 // to be cover
                     if(number[0]=='%') {
                     rest += "  // TO BE COVER";
                     }
-                } 
+                }
                 string space = string(number.length(), ' ');
                 oss << space << rest << '\n';
-            } 
+            }
             else {
                 oss << line << "\n";
             }

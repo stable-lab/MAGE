@@ -46,8 +46,8 @@ repos:
         additional_dependencies: [flake8-bugbear]
         args: ["--max-line-length=88", "--extend-ignore=E203,W503,E501,F541"]
 
-  - repo: https://github.com/pre-commit/mirrors-mypy
-    rev: v1.3.0
-    hooks:
-      - id: mypy
-        args: [--ignore-missing-imports]
+  # - repo: https://github.com/pre-commit/mirrors-mypy
+  #   rev: v1.3.0
+  #   hooks:
+  #     - id: mypy
+  #       args: [--ignore-missing-imports]

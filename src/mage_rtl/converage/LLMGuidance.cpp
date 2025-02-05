@@ -27,14 +27,14 @@ LLMGuidance::LLMGuidance(LLMGuidanceConfig config){
     cov_rpst_pattern_ = config.cov_rpst_pattern;
     use_dut_des_ = config.use_dut_des;
     use_dut_inst_ = config.use_dut_inst;
-    
+
 
     cov_path_total_ = cov_path_ + ".total";
-    
+
     // build history directory
     string cmd = "mkdir " + history_dir_path_;
     system(cmd.c_str());
-    
+
     // extract input signals from dut
     genSignalPrompt();
 
@@ -48,7 +48,7 @@ LLMGuidance::LLMGuidance(LLMGuidanceConfig config){
 
     pipe_in.open("../llm-guidance/g2v");
     pipe_out.open("../llm-guidance/v2g");
-    
+
     // Test GPT Python
     pipe_out << "hello"<<endl;
     pipe_out.flush();
@@ -56,24 +56,24 @@ LLMGuidance::LLMGuidance(LLMGuidanceConfig config){
     getline(pipe_in, rsp);
     if(rsp!="hello_end") {
         throw std::runtime_error("Cannot build connect with python GPT");
-    }       
+    }
 }
 
 LLMGuidance::~LLMGuidance() {
     // shut down python gpt process
     pipe_out << "exit"<<endl;
     pipe_out.flush();
-    
+
 }
 
 int LLMGuidance::waitForInput() {
     // judge whether need further testing
-    iter_cnt_++;    
+    iter_cnt_++;
 
     if(iter_cnt_>iter_cnt_max_) {
         return 0;
     }
-    
+
     return 1;
 }
 
@@ -82,7 +82,7 @@ vector<bool> LLMGuidance::getBitInput() {
     // select strategy
     string input_str = covStrategy1();
     // string input_str = genInput4undirectedCov(iter_cnt_==1, "");
-    
+
     std::vector<bool> bitstream;
 
     // bool fmt_correct = checkGPTAnswerFormat(input_str);
@@ -109,7 +109,7 @@ vector<bool> LLMGuidance::getBitInput() {
 int LLMGuidance::sendCovFeedback(){
     // 1> save prompt=>input=>coverage of this iteration to history directory
     writeHistory();
-    
+
     // 2> keep total coverage
 
     ifstream in_file(cov_path_total_);
@@ -140,14 +140,14 @@ int LLMGuidance::sendCovFeedback(){
     ofstream outfile(history_dir_path_+"/cov.log", std::ios_base::app);
     if (!outfile) {
         throw std::runtime_error("Could not open file: " + cov_path_);
-    } 
+    }
     outfile<<"LLM:  Iter = "<< iter_cnt_<<"   Clk Cycle = "<<clk_cycle_num_<<endl;
     outfile<<"      Cov = "<<(float)cur_cov_num/(float)total_cov_num<<"("<<cur_cov_num<<"/"<<total_cov_num<<")\n";
     outfile.close();
-    
+
     if(cur_cov_num==total_cov_num) {
         return 1;
-    }   
+    }
     else
         return 0;
 }
@@ -166,8 +166,8 @@ string LLMGuidance::sendMsg2GPT(string msg, float temperature, bool forget_flag)
     getline(pipe_in, rsp);
     if(rsp!="temperature_end") {
         throw std::runtime_error("Set temperature of GPT failed");
-    }       
-    
+    }
+
     // Choose whether to forget history
     if(forget_flag) {
         pipe_out << "new" <<endl;
@@ -176,27 +176,27 @@ string LLMGuidance::sendMsg2GPT(string msg, float temperature, bool forget_flag)
         getline(pipe_in, rsp);
         if(rsp!="new_end") {
             throw std::runtime_error("Set GPT forget history failed");
-        } 
-    }      
+        }
+    }
 
     // Send prompt and get answer
     if(msg.size()==0)
         return "";
-    
+
     ofstream outfile(gpt_input_path_);  // write prompt to input file
     if (!outfile.is_open()) {
         throw std::runtime_error("Could not open file: " + gpt_input_path_);
     }
     outfile << msg;
     outfile.close();
-    
+
     pipe_out << "prompt" <<endl;
-    pipe_out.flush(); 
+    pipe_out.flush();
 
     getline(pipe_in, rsp);
     if(rsp!="prompt_end") {
         throw std::runtime_error("Get GPT answer response failed");
-    }      
+    }
 
     // Read GPT feedback
     std::ifstream inFile(gpt_output_path_);     // read gpt answer from output file
@@ -214,7 +214,7 @@ string LLMGuidance::sendMsg2GPT(string msg, float temperature, bool forget_flag)
 // 1> tell gpt which signals this DUT has
 // 2> tell gpt what is the format of its generated input
 void LLMGuidance::genSignalPrompt() {
-    
+
     // extract signals from pyverilog generated files
     string filePath = "../input-signals.txt";
     std::ifstream inFile(filePath);
@@ -308,7 +308,7 @@ vector<bool> LLMGuidance::transGPTAnswer2Bits(string answer) {
     }
 
     return result;
-}   
+}
 
 // Check GPT feedback answer obey our format rules
 bool LLMGuidance::checkGPTAnswerFormat(string answer) {
@@ -339,7 +339,7 @@ bool LLMGuidance::checkGPTAnswerFormat(string answer) {
                 return false;
             }
             for (char c : binStr) {
-                if (c != '0' && c != '1') 
+                if (c != '0' && c != '1')
                     return false;
             }
         }
@@ -385,7 +385,7 @@ vector<bool> LLMGuidance::transJsonGPTAnswer2Bits(string answer) {
                         result.push_back(c == '1');
                     }
                     break;
-                }                
+                }
             }
             if(!flag) {
                 return vector<bool>(); // return a null vector to indicate a answer wrong format situation
@@ -393,7 +393,7 @@ vector<bool> LLMGuidance::transJsonGPTAnswer2Bits(string answer) {
             }
         }
         clk_cycle_num_++;
-        
+
         //std::cout << "------------------------\n";
     }
 
@@ -411,7 +411,7 @@ void LLMGuidance::writeHistory() {
     }
     for(string s:prompt_cur_iter_) { outfile << s; }
     outfile.close();
-    
+
     // write gpt answer to history
     string input_history_file = history_dir_path_ + "/answer." + to_string(iter_cnt_);
     ofstream outfile1(input_history_file);
@@ -433,7 +433,7 @@ void LLMGuidance::writeHistory() {
 }
 
 string LLMGuidance::getGptOutputJsonFormat() {
-    string task = R"(Generate the input sequence in binary format, with the binary width matching the width of the respective signal. 
+    string task = R"(Generate the input sequence in binary format, with the binary width matching the width of the respective signal.
         If a DUT has a clk signal, a REQUEST1 signal and a REQUEST2 signal, the input sequence should be presented in the following JSON format:)";
     string json_string = R"([
         {"clk":"1","REQUEST1":"x","REQUEST2":"x"},
