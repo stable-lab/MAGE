@@ -3,7 +3,7 @@
 You can learn more on our Arxiv Paper: https://arxiv.org/abs/2412.07822.
 MAGE is an open-source multi-agent LLM RTL code generator.
 
-![DAC-overview](fig/DAC-overview.jpg)
+![DAC-overview](fig/DAC-overview.png)
 
 ## Environment Set Up
 

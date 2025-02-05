@@ -7,3 +7,6 @@ output*/
 log*/
 data/
 !requirements.txt
+*.o
+*.d
+*.vvp
