@@ -24,23 +24,15 @@ args_dict = {
     "model": "claude-3-5-sonnet-20241022",
     # "model": "gpt-4o-2024-08-06",
     # "filter_instance": "^(Prob070_ece241_2013_q2|Prob151_review2015_fsm)$",
-    # "filter_instance": (
-    #    "^("
-    #    "Prob066_edgecapture|Prob068_countbcd|"
-    #    "Prob092_gatesv100|Prob094_gatesv|Prob099_m2014_q6c|"
-    #    "Prob114_bugs_case|Prob116_m2014_q3|Prob128_fsm_ps2|"
-    #    "Prob133_2014_q3fsm|Prob135_m2014_q6b|Prob137_fsm_serial|"
-    #    "Prob145_circuit8|Prob146_fsm_serialdata"
-    #    ")$"
-    # ),
-    "filter_instance": "^(Prob011_norgate)$",
-    # "filter_instance": "^(.*)$",
+    # "filter_instance": "^(Prob011_norgate)$",
+    "filter_instance": "^(.*)$",
     "type_benchmark": "verilog_eval_v2",
     "path_benchmark": "../verilog-eval",
-    "run_identifier": "claude3.5sonnet_20241113_v2",
+    "run_identifier": "your_run_identifier",
     "n": 1,
     "temperature": 0.85,
     "top_p": 0.95,
+    "use_golden_tb_in_mage": True,
 }
 
 
@@ -86,8 +78,12 @@ def run_round(args: argparse.Namespace, llm: LLM):
             benchmark_type_name=type_benchmark.name,
             task_id=task_id,
             spec=spec,
-            golden_tb_path=golden_tb_path_dict[task_id],
-            golden_rtl_blackbox_path=golden_rtl_path_dict[task_id],
+            golden_tb_path=(
+                golden_tb_path_dict[task_id] if args.use_golden_tb_in_mage else None
+            ),
+            golden_rtl_blackbox_path=(
+                golden_rtl_path_dict[task_id] if args.use_golden_tb_in_mage else None
+            ),
         )
         run_time = timedelta(seconds=time.monotonic() - start_time)
         print(f"{task_id} took {run_time} to execute")

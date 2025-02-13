@@ -9,6 +9,14 @@ MAGE is an open-source multi-agent LLM RTL code generator.
 
 ### 1.> To install the repo itself:
 ```
+git clone https://github.com/stable-lab/MAGE.git
+cd MAGE
+
+# Install conda first if it's not on your machine like "apt install conda"
+# To confirm successful installation of conda, run "conda --version"
+# Continue after successfully installed conda
+conda create -n mage python=3.11
+conda activate mage
 pip install -Ue .
 ```
 
@@ -25,7 +33,7 @@ OPENAI_API_KEY: 'xxxxxxx'
 You'll need to install [ICARUS verilog](https://github.com/steveicarus/iverilog) 12.0
 For latest installation guide, please refer to [iverilog official guide](https://steveicarus.github.io/iverilog/usage/installation.html)
 
-#### Ubuntu
+#### Ubuntu (Local Compilation)
 ```
 apt install -y autoconf gperf make gcc g++ bison flex
 ```
@@ -34,11 +42,22 @@ and
 $ git clone https://github.com/steveicarus/iverilog.git && cd iverilog \
         && git checkout v12-branch \
         && sh ./autoconf.sh && ./configure && make -j4\
-        && make install
+$ sudo make install
 ```
 #### MacOS
 ```
 brew install icarus-verilog
+```
+
+#### Version confirmation of iverilog
+Please confirm the iverilog version is v12 by running
+```
+iverilog -v
+```
+
+First line of output is expected to be:
+```
+Icarus Verilog version 12.0 (stable) (v12_0)
 ```
 
 ### 3.>  Verilator Installation
