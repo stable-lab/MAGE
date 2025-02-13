@@ -23,10 +23,11 @@ pip install -Ue .
 ### 2.>To set api key：
 You can either:
 1. Set "OPENAI_API_KEY", "ANTHROPIC_API_KEY" or other keys in your env variables
-2. Set key.cfg file. Each line should be like:
+2. Create key.cfg file. The file should be in format of:
 
 ```
 OPENAI_API_KEY: 'xxxxxxx'
+ANTHROPIC_API_KEY: 'xxxxxxx'
 ```
 
 ### To install iverilog {.tabset}
@@ -137,13 +138,17 @@ Run arguments can be set in the file like:
 ```
 args_dict = {
     "model": "claude-3-5-sonnet-20241022",
+    # "model": "gpt-4o-2024-08-06",
+    # "filter_instance": "^(Prob070_ece241_2013_q2|Prob151_review2015_fsm)$",
     "filter_instance": "^(Prob011_norgate)$",
+    # "filter_instance": "^(.*)$",
     "type_benchmark": "verilog_eval_v2",
     "path_benchmark": "../verilog-eval",
-    "run_identifier": "claude3.5sonnet_20241113_v2",
+    "run_identifier": "your_run_identifier",
     "n": 1,
     "temperature": 0.85,
     "top_p": 0.95,
+    "use_golden_tb_in_mage": True,
 }
 ```
 Where each argument means:
