@@ -160,3 +160,11 @@ Where each argument means:
 6. n: Number of repeated run to execute
 7. temperature: Argument for LLM generation randomness. Usually between [0, 1]
 8. top_p: Argument for LLM generation randomness. Usually between [0, 1]
+
+
+## Development Guide
+
+Setup pre-commit like:
+```
+pre-commit install
+```
