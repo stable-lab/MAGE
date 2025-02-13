@@ -1,8 +1,8 @@
 config
 httpx
-llama-index-core
-llama-index-llms-anthropic
-llama-index-llms-openai
+llama-index-core==0.12.0
+llama-index-llms-anthropic==0.5.0
+llama-index-llms-openai==0.3.0
 pre-commit
 pydantic
 rich
