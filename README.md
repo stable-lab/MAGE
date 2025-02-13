@@ -15,7 +15,7 @@ cd MAGE
 # Install conda first if it's not on your machine like "apt install conda"
 # To confirm successful installation of conda, run "conda --version"
 # Continue after successfully installed conda
-conda create -n mage python=3.11 
+conda create -n mage python=3.11
 conda activate mage
 pip install -Ue .
 ```
