@@ -1,6 +1,7 @@
 import argparse
 import json
 import time
+import os
 from datetime import timedelta
 from typing import Any, Dict
 
@@ -21,8 +22,9 @@ logger = get_logger(__name__)
 
 
 args_dict = {
+    "provider" : "anthropic",
     "model": "claude-3-5-sonnet-20241022",
-    # "model": "gpt-4o-2024-08-06",
+    #"model": "gpt-4o-2024-08-06",
     # "filter_instance": "^(Prob070_ece241_2013_q2|Prob151_review2015_fsm)$",
     "filter_instance": "^(Prob011_norgate)$",
     # "filter_instance": "^(.*)$",
@@ -32,7 +34,9 @@ args_dict = {
     "n": 1,
     "temperature": 0.85,
     "top_p": 0.95,
+    "max_token": 8192,
     "use_golden_tb_in_mage": True,
+    "key_cfg_path": os.path.join(os.path.dirname(os.path.abspath(__file__)), 'key.cfg')
 }
 
 
@@ -148,8 +152,10 @@ def run_round(args: argparse.Namespace, llm: LLM):
 
 def main():
     args = argparse.Namespace(**args_dict)
-    cfg = Config("./key.cfg")
-    llm = get_llm(model=args.model, api_key=cfg["ANTHROPIC_API_KEY"], max_tokens=8192)
+    #cfg = Config(args.key_cfg_path)
+    #cfg = Config("./key.cfg")
+    #llm = get_llm(model=args.model, api_key=cfg["ANTHROPIC_API_KEY"], max_tokens=8192)
+    llm = get_llm(args_d=args_dict)
     identifier_head = args.run_identifier
     n = args.n
     set_exp_setting(temperature=args.temperature, top_p=args.top_p)
