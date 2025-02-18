@@ -1,3 +1,4 @@
+anthropic==0.39.0
 config
 httpx==0.27.2
 llama-index-core==0.12.0
