@@ -35,23 +35,22 @@ class Config:
 
 def get_llm(**kwargs) -> LLM:
     err_msgs = []
-    args_d = kwargs["args_d"]
-    cfg = Config(args_d["key_cfg_path"])
-    
+
     LLM_func = Anthropic
-    if args_d["provider"] == "anthropic":
+    if kwargs["provider"] == "anthropic":
         LLM_func = Anthropic
-        api_key_cfg = cfg["ANTHROPIC_API_KEY"]
-    elif args_d["provider"] == "openai":
+    elif kwargs["provider"] == "openai":
         LLM_func = OpenAI
-        api_key_cfg = cfg["OPENAI_API_KEY"]
     # add more providers if needed
-    
-    #for LLM_func in [OpenAI, Anthropic]:
+
     try:
-        llm: LLM = LLM_func(model=args_d["model"], api_key=api_key_cfg, max_tokens=8192)
+        llm: LLM = LLM_func(
+            model=kwargs["model"],
+            api_key=kwargs["api_key"],
+            max_tokens=kwargs["max_token"],
+        )
         _ = llm.complete("Say 'Hi'")
-        #break
+
     except Exception as e:
         err_msgs.append(str(e))
     """ else:
