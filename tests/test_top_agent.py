@@ -152,21 +152,10 @@ def run_round(args: argparse.Namespace, llm: LLM):
 
 def main():
     args = argparse.Namespace(**args_dict)
-    cfg = Config(args.key_cfg_path)
-    # cfg = Config("./key.cfg")
-    # llm = get_llm(model=args.model, api_key=cfg["ANTHROPIC_API_KEY"], max_tokens=8192)
-    # llm = get_llm(args_d=args_dict)
-
-    api_key_cfg = ""
-    if args.provider == "anthropic":
-        api_key_cfg = cfg["ANTHROPIC_API_KEY"]
-    elif args.provider == "openai":
-        api_key_cfg = cfg["OPENAI_API_KEY"]
-    # add more providers if needed
 
     llm = get_llm(
         model=args.model,
-        api_key=api_key_cfg,
+        cfg_path=args.key_cfg_path,
         max_token=args.max_token,
         provider=args.provider,
     )
