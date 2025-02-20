@@ -55,7 +55,7 @@ def get_llm(**kwargs) -> LLM:
 
     except Exception as e:
         raise Exception("gen_config: Failed to get LLM") from e
-    
+
     return llm
 
 

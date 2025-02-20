@@ -13,7 +13,7 @@ from mage_rtl.benchmark_read_helper import (
     TypeBenchmarkFile,
     get_benchmark_contents,
 )
-from mage_rtl.gen_config import Config, get_llm, set_exp_setting
+from mage_rtl.gen_config import get_llm, set_exp_setting
 from mage_rtl.log_utils import get_logger
 from mage_rtl.sim_reviewer import sim_review_golden_benchmark
 from mage_rtl.token_counter import TokenCount
