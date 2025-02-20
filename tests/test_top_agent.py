@@ -1,5 +1,6 @@
 import argparse
 import json
+import os
 import time
 from datetime import timedelta
 from typing import Any, Dict
@@ -12,7 +13,7 @@ from mage_rtl.benchmark_read_helper import (
     TypeBenchmarkFile,
     get_benchmark_contents,
 )
-from mage_rtl.gen_config import Config, get_llm, set_exp_setting
+from mage_rtl.gen_config import get_llm, set_exp_setting
 from mage_rtl.log_utils import get_logger
 from mage_rtl.sim_reviewer import sim_review_golden_benchmark
 from mage_rtl.token_counter import TokenCount
@@ -21,6 +22,7 @@ logger = get_logger(__name__)
 
 
 args_dict = {
+    "provider": "anthropic",
     "model": "claude-3-5-sonnet-20241022",
     # "model": "gpt-4o-2024-08-06",
     # "filter_instance": "^(Prob070_ece241_2013_q2|Prob151_review2015_fsm)$",
@@ -32,7 +34,9 @@ args_dict = {
     "n": 1,
     "temperature": 0.85,
     "top_p": 0.95,
+    "max_token": 8192,
     "use_golden_tb_in_mage": True,
+    "key_cfg_path": os.path.join(os.path.dirname(os.path.abspath(__file__)), "key.cfg"),
 }
 
 
@@ -148,8 +152,13 @@ def run_round(args: argparse.Namespace, llm: LLM):
 
 def main():
     args = argparse.Namespace(**args_dict)
-    cfg = Config("./key.cfg")
-    llm = get_llm(model=args.model, api_key=cfg["ANTHROPIC_API_KEY"], max_tokens=8192)
+
+    llm = get_llm(
+        model=args.model,
+        cfg_path=args.key_cfg_path,
+        max_token=args.max_token,
+        provider=args.provider,
+    )
     identifier_head = args.run_identifier
     n = args.n
     set_exp_setting(temperature=args.temperature, top_p=args.top_p)

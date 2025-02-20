@@ -34,19 +34,28 @@ class Config:
 
 
 def get_llm(**kwargs) -> LLM:
-    err_msgs = []
-    for LLM_func in [OpenAI, Anthropic]:
-        try:
-            llm: LLM = LLM_func(**kwargs)
-            _ = llm.complete("Say 'Hi'")
-            break
-        except Exception as e:
-            err_msgs.append(str(e))
-    else:
-        raise Exception(
-            f"gen_config: Failed to get LLM. Error msgs include:\n"
-            + "\n".join(err_msgs)
+    LLM_func = Anthropic
+    cfg = Config(kwargs["cfg_path"])
+    api_key_cfg = ""
+    if kwargs["provider"] == "anthropic":
+        LLM_func = Anthropic
+        api_key_cfg = cfg["ANTHROPIC_API_KEY"]
+    elif kwargs["provider"] == "openai":
+        LLM_func = OpenAI
+        api_key_cfg = cfg["OPENAI_API_KEY"]
+    # add more providers if needed
+
+    try:
+        llm: LLM = LLM_func(
+            model=kwargs["model"],
+            api_key=api_key_cfg,
+            max_tokens=kwargs["max_token"],
         )
+        _ = llm.complete("Say 'Hi'")
+
+    except Exception as e:
+        raise Exception("gen_config: Failed to get LLM") from e
+
     return llm
 
 

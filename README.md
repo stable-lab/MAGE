@@ -137,6 +137,7 @@ Run arguments can be set in the file like:
 
 ```
 args_dict = {
+    "provider": "anthropic",
     "model": "claude-3-5-sonnet-20241022",
     # "model": "gpt-4o-2024-08-06",
     # "filter_instance": "^(Prob070_ece241_2013_q2|Prob151_review2015_fsm)$",
@@ -148,18 +149,23 @@ args_dict = {
     "n": 1,
     "temperature": 0.85,
     "top_p": 0.95,
+    "max_token": 8192,
     "use_golden_tb_in_mage": True,
+    "key_cfg_path": os.path.join(os.path.dirname(os.path.abspath(__file__)), "key.cfg"),
 }
 ```
 Where each argument means:
-1. model: The LLM model used. Support for gpt-4o and claude has been verified.
-2. filter_instance: A RegEx style instance name filter.
-3. type_benchmark: Support running verilog_eval_v1 or verilog_eval_v2
-4. path_benchmark: Where the benchmark repo is cloned
-5. run_identifier: Unique name to disguish different runs
-6. n: Number of repeated run to execute
-7. temperature: Argument for LLM generation randomness. Usually between [0, 1]
-8. top_p: Argument for LLM generation randomness. Usually between [0, 1]
+1. provider: The api provider of the LLM model used. e.g. anthropic-->claude, openai-->gpt-4o
+2. model: The LLM model used. Support for gpt-4o and claude has been verified.
+3. filter_instance: A RegEx style instance name filter.
+4. type_benchmark: Support running verilog_eval_v1 or verilog_eval_v2
+5. path_benchmark: Where the benchmark repo is cloned
+6. run_identifier: Unique name to disguish different runs
+7. n: Number of repeated run to execute
+8. temperature: Argument for LLM generation randomness. Usually between [0, 1]
+9. top_p: Argument for LLM generation randomness. Usually between [0, 1]
+10. max_token: Maximum number of tokens the model is allowed to generate in its output.
+11. key_cfg_path: Path to your key.cfg file. Defaulted to be under MAGE/tests
 
 
 ## Development Guide
