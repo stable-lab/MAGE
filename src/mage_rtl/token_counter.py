@@ -8,10 +8,13 @@ from llama_index.core.base.llms.types import ChatMessage, ChatResponse
 from llama_index.core.llms.llm import LLM
 from llama_index.llms.anthropic import Anthropic
 from llama_index.llms.openai import OpenAI
+from llama_index.llms.vertex import Vertex
 from pydantic import BaseModel
+from vertexai.preview.generative_models import GenerativeModel
 
 from .gen_config import get_exp_setting
 from .log_utils import get_logger
+from .utils import reformat_json_string
 
 logger = get_logger(__name__)
 
@@ -93,6 +96,9 @@ token_costs = {
     "gemini-1.5-pro-002": TokenCost(
         in_token_cost_per_token=1.25 / 1000000, out_token_cost_per_token=5.0 / 1000000
     ),
+    "gemini-2.0-flash-001": TokenCost(
+        in_token_cost_per_token=0.1 / 1000000, out_token_cost_per_token=0.4 / 1000000
+    ),
 }
 
 
@@ -105,11 +111,28 @@ class TokenCounter:
         self.token_cnts_lock = asyncio.Lock()
         self.cur_tag = ""
         self.max_parallel_requests: int = 10
+        self.enable_reformat_json = isinstance(llm, Vertex)
         model = llm.metadata.model_name
         if isinstance(llm, OpenAI):
             self.encoding = tiktoken.encoding_for_model(model)
         elif isinstance(llm, Anthropic):
             self.encoding = llm.tokenizer
+        elif isinstance(llm, Vertex):
+            assert llm.model.startswith(
+                "gemini"
+            ), f"Non-gemini Vertex model is not supported: {llm.model}"
+            assert isinstance(llm._client, GenerativeModel)
+
+            class VertexEncoding:
+                def __init__(self, client: GenerativeModel):
+                    self.client = client
+
+                def encode(self, text: str) -> List[str]:
+                    token_len = self.client.count_tokens(text).total_tokens
+                    return ["placeholder" for _ in range(token_len)]
+
+            self.encoding = VertexEncoding(llm._client)
+            self.activate_structure_output = True
         else:
             raise Exception(f"gen_config: No tokenizer for model {model}")
         logger.info(f"Found tokenizer for model '{model}'")
@@ -147,6 +170,8 @@ class TokenCounter:
         out_token_cnt = self.count(response.message.content)
         token_cnt = TokenCount(in_token_cnt=in_token_cnt, out_token_cnt=out_token_cnt)
         self.token_cnts[self.cur_tag].append(token_cnt)
+        if self.enable_reformat_json:
+            response.message.content = reformat_json_string(response.message.content)
         return (response, token_cnt)
 
     async def count_achat(
@@ -165,6 +190,8 @@ class TokenCounter:
         token_cnt = TokenCount(in_token_cnt=in_token_cnt, out_token_cnt=out_token_cnt)
         async with self.token_cnts_lock:
             self.token_cnts[self.cur_tag].append(token_cnt)
+        if self.enable_reformat_json:
+            response.message.content = reformat_json_string(response.message.content)
         return (response, token_cnt)
 
     async def count_achat_batch(
@@ -309,6 +336,8 @@ class TokenCounterCached(TokenCounter):
             ),
         )
         self.token_cnts[self.cur_tag].append(token_cnt)
+        if self.enable_reformat_json:
+            response.message.content = reformat_json_string(response.message.content)
         return (response, token_cnt)
 
     async def count_achat(
@@ -347,6 +376,8 @@ class TokenCounterCached(TokenCounter):
         )
         async with self.token_cnts_lock:
             self.token_cnts[self.cur_tag].append(token_cnt)
+        if self.enable_reformat_json:
+            response.message.content = reformat_json_string(response.message.content)
         return (response, token_cnt)
 
     def log_token_stats(self) -> None:

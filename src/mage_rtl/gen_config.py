@@ -1,9 +1,11 @@
 import os
 
 import config
+from google.oauth2 import service_account
 from llama_index.core.llms.llm import LLM
 from llama_index.llms.anthropic import Anthropic
 from llama_index.llms.openai import OpenAI
+from llama_index.llms.vertex import Vertex
 from pydantic import BaseModel
 
 from .log_utils import get_logger
@@ -34,27 +36,57 @@ class Config:
 
 
 def get_llm(**kwargs) -> LLM:
-    LLM_func = Anthropic
     cfg = Config(kwargs["cfg_path"])
-    api_key_cfg = ""
-    if kwargs["provider"] == "anthropic":
-        LLM_func = Anthropic
-        api_key_cfg = cfg["ANTHROPIC_API_KEY"]
+    provider: str = kwargs["provider"]
+    provider = provider.lower()
+    if provider == "anthropic":
+        try:
+            llm: LLM = Anthropic(
+                model=kwargs["model"],
+                api_key=cfg["ANTHROPIC_API_KEY"],
+                max_tokens=kwargs["max_token"],
+            )
+
+        except Exception as e:
+            raise Exception(f"gen_config: Failed to get {provider} LLM") from e
     elif kwargs["provider"] == "openai":
-        LLM_func = OpenAI
-        api_key_cfg = cfg["OPENAI_API_KEY"]
-    # add more providers if needed
+        try:
+            llm: LLM = OpenAI(
+                model=kwargs["model"],
+                api_key=cfg["OPENAI_API_KEY"],
+                max_tokens=kwargs["max_token"],
+            )
+
+        except Exception as e:
+            raise Exception(f"gen_config: Failed to get {provider} LLM") from e
+    elif kwargs["provider"] == "vertex":
+        service_account_path = os.path.expanduser(cfg["VERTEX_SERVICE_ACCOUNT_PATH"])
+        if not os.path.exists(service_account_path):
+            raise FileNotFoundError(
+                f"Google Cloud Service Account file not found: {service_account_path}"
+            )
+        try:
+            credentials = service_account.Credentials.from_service_account_file(
+                service_account_path
+            )
+            llm: LLM = Vertex(
+                model=kwargs["model"],
+                project=credentials.project_id,
+                credentials=credentials,
+                max_tokens=kwargs["max_token"],
+            )
+
+        except Exception as e:
+            raise Exception(f"gen_config: Failed to get {provider} LLM") from e
+    else:
+        raise ValueError(f"gen_config: Invalid provider: {provider}")
 
     try:
-        llm: LLM = LLM_func(
-            model=kwargs["model"],
-            api_key=api_key_cfg,
-            max_tokens=kwargs["max_token"],
-        )
         _ = llm.complete("Say 'Hi'")
-
     except Exception as e:
-        raise Exception("gen_config: Failed to get LLM") from e
+        raise Exception(
+            f"gen_config: Failed to complete LLM chat for {provider}"
+        ) from e
 
     return llm
 

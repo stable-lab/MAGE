@@ -1,6 +1,5 @@
 import argparse
 import json
-import os
 import time
 from datetime import timedelta
 from typing import Any, Dict
@@ -22,8 +21,9 @@ logger = get_logger(__name__)
 
 
 args_dict = {
-    "provider": "anthropic",
-    "model": "claude-3-5-sonnet-20241022",
+    "provider": "vertex",
+    "model": "gemini-2.0-flash-001",
+    # "model": "claude-3-5-sonnet-20241022",
     # "model": "gpt-4o-2024-08-06",
     # "filter_instance": "^(Prob070_ece241_2013_q2|Prob151_review2015_fsm)$",
     "filter_instance": "^(Prob011_norgate)$",
@@ -36,7 +36,7 @@ args_dict = {
     "top_p": 0.95,
     "max_token": 8192,
     "use_golden_tb_in_mage": True,
-    "key_cfg_path": os.path.join(os.path.dirname(os.path.abspath(__file__)), "key.cfg"),
+    "key_cfg_path": "./key.cfg",
 }
 
 
