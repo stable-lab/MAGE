@@ -9,6 +9,7 @@ from llama_index.llms.vertex import Vertex
 from pydantic import BaseModel
 
 from .log_utils import get_logger
+from .utils import VertexAnthropicWithCredentials
 
 logger = get_logger(__name__)
 
@@ -60,6 +61,9 @@ def get_llm(**kwargs) -> LLM:
         except Exception as e:
             raise Exception(f"gen_config: Failed to get {provider} LLM") from e
     elif kwargs["provider"] == "vertex":
+        logger.warning(
+            "Support of Vertex Gemini LLMs is still in experimental stage, use with caution"
+        )
         service_account_path = os.path.expanduser(cfg["VERTEX_SERVICE_ACCOUNT_PATH"])
         if not os.path.exists(service_account_path):
             raise FileNotFoundError(
@@ -73,6 +77,27 @@ def get_llm(**kwargs) -> LLM:
                 model=kwargs["model"],
                 project=credentials.project_id,
                 credentials=credentials,
+                max_tokens=kwargs["max_token"],
+            )
+
+        except Exception as e:
+            raise Exception(f"gen_config: Failed to get {provider} LLM") from e
+    elif kwargs["provider"] == "vertexanthropic":
+        service_account_path = os.path.expanduser(cfg["VERTEX_SERVICE_ACCOUNT_PATH"])
+        if not os.path.exists(service_account_path):
+            raise FileNotFoundError(
+                f"Google Cloud Service Account file not found: {service_account_path}"
+            )
+        try:
+            credentials = service_account.Credentials.from_service_account_file(
+                service_account_path,
+                scopes=["https://www.googleapis.com/auth/cloud-platform"],
+            )
+            llm: LLM = VertexAnthropicWithCredentials(
+                model=kwargs["model"],
+                project_id=credentials.project_id,
+                credentials=credentials,
+                region=cfg["VERTEX_REGION"],
                 max_tokens=kwargs["max_token"],
             )
 

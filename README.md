@@ -28,6 +28,8 @@ You can either:
 ```
 OPENAI_API_KEY: 'xxxxxxx'
 ANTHROPIC_API_KEY: 'xxxxxxx'
+VERTEX_SERVICE_ACCOUNT_PATH: 'xxxxxxx'
+VERTEX_REGION: 'xxxxxxx'
 ```
 
 ### To install iverilog {.tabset}

@@ -73,12 +73,21 @@ class TokenCountCached(TokenCount):
 class TokenCost(BaseModel):
     """Token cost of an LLM call"""
 
-    in_token_cost_per_token: float
-    out_token_cost_per_token: float
+    in_token_cost_per_token: float = 0.0
+    out_token_cost_per_token: float = 0.0
 
 
 token_costs = {
     "claude-3-5-sonnet-20241022": TokenCost(
+        in_token_cost_per_token=3.0 / 1000000, out_token_cost_per_token=15.0 / 1000000
+    ),
+    "claude-3-5-sonnet@20241022": TokenCost(
+        in_token_cost_per_token=3.0 / 1000000, out_token_cost_per_token=15.0 / 1000000
+    ),
+    "claude-3-7-sonnet-20250219": TokenCost(
+        in_token_cost_per_token=3.0 / 1000000, out_token_cost_per_token=15.0 / 1000000
+    ),
+    "claude-3-7-sonnet@20250219": TokenCost(
         in_token_cost_per_token=3.0 / 1000000, out_token_cost_per_token=15.0 / 1000000
     ),
     "gpt-4o-2024-08-06": TokenCost(
@@ -136,8 +145,8 @@ class TokenCounter:
         else:
             raise Exception(f"gen_config: No tokenizer for model {model}")
         logger.info(f"Found tokenizer for model '{model}'")
-        self.token_cost = token_costs[model] if model in token_costs else None
-        if self.token_cost is None:
+        self.token_cost = token_costs[model] if model in token_costs else TokenCost()
+        if self.token_cost == TokenCost():
             logger.warning(
                 f"Cannot find token cost for model '{model}' in record. Won't display cost in USD"
             )
@@ -311,11 +320,6 @@ class TokenCounterCached(TokenCounter):
         )
         response = llm.chat(
             messages,
-            extra_headers=(
-                {"anthropic-beta": "prompt-caching-2024-07-31"}
-                if self.enable_cache
-                else {}
-            ),
             top_p=settings.top_p,
             temperature=settings.temperature,
         )
@@ -350,11 +354,6 @@ class TokenCounterCached(TokenCounter):
         )
         response = await llm.achat(
             messages,
-            extra_headers=(
-                {"anthropic-beta": "prompt-caching-2024-07-31"}
-                if self.enable_cache
-                else {}
-            ),
             top_p=settings.top_p,
             temperature=settings.temperature,
         )
