@@ -21,13 +21,13 @@ logger = get_logger(__name__)
 
 
 args_dict = {
-    "provider": "anthropic",
-    # "model": "claude-3-7-sonnet@20250219",
+    "provider": "vertexanthropic",
+    "model": "claude-3-7-sonnet@20250219",
     # "model": "gemini-2.0-flash-001",
-    "model": "claude-3-7-sonnet-20250219",
+    # "model": "claude-3-7-sonnet-20250219",
     # "model": "gpt-4o-2024-08-06",
     # "filter_instance": "^(Prob070_ece241_2013_q2|Prob151_review2015_fsm)$",
-    "filter_instance": "^(Prob034_dff8)$",
+    "filter_instance": "^(Prob011_norgate)$",
     # "filter_instance": "^(.*)$",
     "type_benchmark": "verilog_eval_v2",
     "path_benchmark": "../verilog-eval",
