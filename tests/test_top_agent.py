@@ -29,14 +29,14 @@ args_dict = {
     "filter_instance": "^(Prob011_norgate)$",
     # "filter_instance": "^(.*)$",
     "type_benchmark": "verilog_eval_v2",
-    "path_benchmark": "../verilog-eval",
+    "path_benchmark": "./verilog-eval",
     "run_identifier": "your_run_identifier",
     "n": 1,
     "temperature": 0.85,
     "top_p": 0.95,
     "max_token": 8192,
     "use_golden_tb_in_mage": True,
-    "key_cfg_path": "../key.cfg",
+    "key_cfg_path": "./key.cfg",
 }
 
 

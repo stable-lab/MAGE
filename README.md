@@ -99,7 +99,7 @@ python3 setup.py install --user
 ```
 
 ```
-git submodule update -- init -- recursive
+git submodule update --init --recursive
 ```
 
 ## File structure
