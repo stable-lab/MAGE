@@ -5,7 +5,6 @@ import subprocess
 import backoff
 import openai
 import pandas as pd
-
 from mage.benchmark_read_helper import (
     TypeBenchmark,
     TypeBenchmarkFile,
