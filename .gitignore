@@ -1,4 +1,4 @@
-*egg-info/
+*.egg-info/
 *.vcd
 __pycache__/
 key.cfg
@@ -10,3 +10,5 @@ data/
 *.o
 *.d
 *.vvp
+dist/
+build/

@@ -17,7 +17,7 @@ cd MAGE
 # Continue after successfully installed conda
 conda create -n mage python=3.11
 conda activate mage
-pip install -Ue .
+pip install .
 ```
 
 ### 2.>To set api key：
@@ -153,7 +153,7 @@ args_dict = {
     "top_p": 0.95,
     "max_token": 8192,
     "use_golden_tb_in_mage": True,
-    "key_cfg_path": os.path.join(os.path.dirname(os.path.abspath(__file__)), "key.cfg"),
+    "key_cfg_path": "key.cfg",
 }
 ```
 Where each argument means:
@@ -167,7 +167,7 @@ Where each argument means:
 8. temperature: Argument for LLM generation randomness. Usually between [0, 1]
 9. top_p: Argument for LLM generation randomness. Usually between [0, 1]
 10. max_token: Maximum number of tokens the model is allowed to generate in its output.
-11. key_cfg_path: Path to your key.cfg file. Defaulted to be under MAGE/tests
+11. key_cfg_path: Path to your key.cfg file. Defaulted to be under MAGE
 
 
 ## Development Guide

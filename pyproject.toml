@@ -1,0 +1,38 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "mage"
+version = "1.0.1"
+description = "MAGE: Open-source multi-agent LLM RTL code generator"
+readme = { file = "README.md", content-type = "text/markdown" }
+requires-python = ">=3.11"
+dependencies = [
+  "config",
+  "fsspec[http]<=2024.9.0,>=2023.1.0",
+  "httpx<1,>=0.23.0",
+  "llama-index-core",
+  "llama-index-llms-anthropic",
+  "llama-index-llms-openai",
+  "llama-index-llms-vertex",
+  "pre-commit",
+  "pydantic",
+  "rich",
+  "tiktoken"
+]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Intended Audience :: Developers",
+  "License :: OSI Approved :: Apache Software License",
+  "Operating System :: POSIX",
+  "Programming Language :: Python :: 3"
+]
+
+[tool.setuptools]
+include-package-data = true
+zip-safe = false
+packages = ["mage"]
+
+[tool.setuptools.package-dir]
+mage = "src/mage_rtl"
