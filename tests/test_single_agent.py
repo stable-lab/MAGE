@@ -5,15 +5,14 @@ import subprocess
 import backoff
 import openai
 import pandas as pd
-
-from mage_rtl.benchmark_read_helper import (
+from mage.benchmark_read_helper import (
     TypeBenchmark,
     TypeBenchmarkFile,
     get_benchmark_contents,
 )
-from mage_rtl.gen_config import Config, get_llm
-from mage_rtl.log_utils import get_logger
-from mage_rtl.rtl_generator import RTLGenerator
+from mage.gen_config import Config, get_llm
+from mage.log_utils import get_logger
+from mage.rtl_generator import RTLGenerator
 
 # Configuration and Constants
 # model = "gpt-4-0314"

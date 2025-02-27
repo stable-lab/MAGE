@@ -5,17 +5,16 @@ from datetime import timedelta
 from typing import Any, Dict
 
 from llama_index.core.llms import LLM
-
-from mage_rtl.agent import TopAgent
-from mage_rtl.benchmark_read_helper import (
+from mage.agent import TopAgent
+from mage.benchmark_read_helper import (
     TypeBenchmark,
     TypeBenchmarkFile,
     get_benchmark_contents,
 )
-from mage_rtl.gen_config import get_llm, set_exp_setting
-from mage_rtl.log_utils import get_logger
-from mage_rtl.sim_reviewer import sim_review_golden_benchmark
-from mage_rtl.token_counter import TokenCount
+from mage.gen_config import get_llm, set_exp_setting
+from mage.log_utils import get_logger
+from mage.sim_reviewer import sim_review_golden_benchmark
+from mage.token_counter import TokenCount
 
 logger = get_logger(__name__)
 
@@ -37,7 +36,7 @@ args_dict = {
     "top_p": 0.95,
     "max_token": 8192,
     "use_golden_tb_in_mage": True,
-    "key_cfg_path": "./key.cfg",
+    "key_cfg_path": "../key.cfg",
 }
 
 
