@@ -10,6 +10,8 @@ MAGE is an open-source multi-agent LLM RTL code generator.
 ### 1.> To install the repo itself:
 ```
 git clone https://github.com/stable-lab/MAGE.git
+# To get submodules at the same time
+git clone --recursive https://github.com/stable-lab/MAGE.git
 cd MAGE
 
 # Install conda first if it's not on your machine like "apt install conda"
@@ -26,10 +28,10 @@ You can either:
 2. Create key.cfg file. The file should be in format of:
 
 ```
-OPENAI_API_KEY: 'xxxxxxx'
-ANTHROPIC_API_KEY: 'xxxxxxx'
-VERTEX_SERVICE_ACCOUNT_PATH: 'xxxxxxx'
-VERTEX_REGION: 'xxxxxxx'
+OPENAI_API_KEY= 'xxxxxxx'
+ANTHROPIC_API_KEY= 'xxxxxxx'
+VERTEX_SERVICE_ACCOUNT_PATH= 'xxxxxxx'
+VERTEX_REGION= 'xxxxxxx'
 ```
 
 ### To install iverilog {.tabset}
@@ -97,7 +99,7 @@ python3 setup.py install --user
 ```
 
 ```
-git clone https://github.com/NVlabs/verilog-eval
+git submodule update -- init -- recursive
 ```
 
 ## File structure
