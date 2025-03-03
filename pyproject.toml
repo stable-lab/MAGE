@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools>=61.0", "wheel"]
+requires = ["setuptools>=64.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -35,4 +35,4 @@ zip-safe = false
 packages = ["mage"]
 
 [tool.setuptools.package-dir]
-mage = "src/mage_rtl"
+"" = "src"

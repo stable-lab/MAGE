@@ -19,7 +19,7 @@ cd MAGE
 # Continue after successfully installed conda
 conda create -n mage python=3.11
 conda activate mage
-pip install .
+pip install -e . --config-settings editable_mode=compat
 ```
 
 ### 2.>To set api key：
