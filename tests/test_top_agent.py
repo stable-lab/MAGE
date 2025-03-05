@@ -5,6 +5,7 @@ from datetime import timedelta
 from typing import Any, Dict
 
 from llama_index.core.llms import LLM
+
 from mage.agent import TopAgent
 from mage.benchmark_read_helper import (
     TypeBenchmark,
