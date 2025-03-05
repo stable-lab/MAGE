@@ -19,7 +19,11 @@ cd MAGE
 # Continue after successfully installed conda
 conda create -n mage python=3.11
 conda activate mage
-pip install -e . --config-settings editable_mode=compat
+
+# Install the repo as a package.
+# If want to editable install as developer,
+# please check development guide below.
+pip install .
 ```
 
 ### 2.>To set api key：
@@ -102,36 +106,6 @@ python3 setup.py install --user
 git submodule update --init --recursive
 ```
 
-## File structure
-```
-.
-├── README.md
-├── action.yml
-├── requirements.txt
-├── setup.py
-├── src
-│   └── mage_rtl
-│       ├── agent.py
-│       ├── bash_tools.py
-│       ├── benchmark_read_helper.py
-│       ├── gen_config.py
-│       ├── log_utils.py
-│       ├── prompts.py
-│       ├── rtl_editor.py
-│       ├── rtl_generator.py
-│       ├── sim_judge.py
-│       ├── sim_reviewer.py
-│       ├── tb_generator.py
-│       ├── token_counter.py
-│       └── utils.py
-├── testbench_generate.ipynb
-└── tests
-    ├── test_llm_chat.py
-    ├── test_rtl_generator.py
-    ├── test_single_agent.py
-    └── test_top_agent.py
-```
-
 ## Run Guide
 ```
 python tests/test_top_agent.py
@@ -174,7 +148,8 @@ Where each argument means:
 
 ## Development Guide
 
-Setup pre-commit like:
+Run editable install and setup pre-commit like:
 ```
+pip install -e . --config-settings editable_mode=compat
 pre-commit install
 ```
