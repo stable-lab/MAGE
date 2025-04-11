@@ -77,7 +77,7 @@ class TokenCost(BaseModel):
     out_token_cost_per_token: float = 0.0
 
 
-token_costs = {
+TOKEN_COSTS = {
     "claude-3-5-sonnet-20241022": TokenCost(
         in_token_cost_per_token=3.0 / 1000000, out_token_cost_per_token=15.0 / 1000000
     ),
@@ -143,13 +143,22 @@ class TokenCounter:
             self.encoding = VertexEncoding(llm._client)
             self.activate_structure_output = True
         else:
-            raise Exception(f"gen_config: No tokenizer for model {model}")
-        logger.info(f"Found tokenizer for model '{model}'")
-        self.token_cost = token_costs[model] if model in token_costs else TokenCost()
-        if self.token_cost == TokenCost():
             logger.warning(
-                f"Cannot find token cost for model '{model}' in record. Won't display cost in USD"
+                f"Cannot find tokenizer for model '{model}'. "
+                "May need to change mage.token_counter.TokenCounter.__init__"
             )
+            self.encoding = None
+            self.token_cost = TokenCost()
+            return
+        logger.info(f"Found tokenizer for model '{model}'")
+        if model not in TOKEN_COSTS:
+            self.token_cost = TokenCost()
+            logger.warning(
+                f"Cannot find token cost for model '{model}' in record. "
+                "May need to append to mage.token_counter.TOKEN_COSTS"
+            )
+            return
+        self.token_cost = TOKEN_COSTS[model]
 
     def set_cur_tag(self, tag: str) -> None:
         self.cur_tag = tag
